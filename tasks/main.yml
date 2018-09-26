@@ -19,6 +19,24 @@
     owner: "root"
     group: "root"
 
+- name: Create service base root folder
+  become: true
+  file:
+    path: "{{ wildfly_base_root }}"
+    state: directory
+    owner: root
+    group: root
+    mode: 0755
+
+- name: Create service base folder
+  become: true
+  file:
+    path: "{{ wildfly_base_root }}/{{ svc_name }}"
+    state: directory
+    owner: root
+    group: root
+    mode: 0755
+
 - name: Create service group
   become: true
   group:
@@ -31,22 +49,13 @@
     state: present
     name: "{{ svc_name }}"
     group: "{{ svc_name }}"
-#    home: "{{ wildfly_base_root }}/{{ svc_name }}"
+    home: "{{ wildfly_base_root }}/{{ svc_name }}"
     shell: /sbin/nologin
     comment: "Service user for {{ svc_name }} service."
 
-- name: Create service base folder
-  become: true
-  file:
-    path: "{{ wildfly_base_root }}/{{ svc_name }}"
-    state: directory
-    owner: "{{ svc_name }}"
-    group: "{{ svc_name }}"
-    mode: 0755
-
 - name: Copy standalone to service base folder
   become: true
-  command: cp -pr "{{ wildfly_home_root }}/{{ svc_name }}/standalone/*" "{{ wildfly_base_root }}/{{ svc_name }}"
+  command: cp -pr "{{ wildfly_home_root }}/wildfly-{{ wildfly_version }}/standalone/*" "{{ wildfly_base_root }}/{{ svc_name }}"
 
 - name: Set permissions on service base folder
   become: true

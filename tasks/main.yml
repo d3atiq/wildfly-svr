@@ -1,7 +1,16 @@
 ---
 # tasks file for wildfly-svr
 
-- name: Download and unpack wildfly
+- name: Create wildfly installation folder
+  become: true
+  file:
+    path: "{{ wildfly_home_root }}/wildfly-{{ wildfly_version }}"
+    state: directory
+    owner: root
+    group: root
+    mode: 0755
+
+-- name: Download and unpack wildfly
   become: true
   unarchive:
     remote_src: yes
@@ -9,6 +18,16 @@
     dest: "{{ wildfly_home_root }}/wildfly-{{ wildfly_version }}"
     owner: "root"
     group: "root"
+
+- name: Create service user
+  become: true
+  user:
+    state: present
+    name: "{{ svc_name }}"
+    group: "{{ svc_name }}"
+    home: "{{ wildfly_base_root }}/{{ svc_name }}"
+    shell: /sbin/nologin
+    comment: "Service user for {{ svc_name }} service."
 
 - name: Create service base folder
   become: true
@@ -39,16 +58,6 @@
     owner: "{{ svc_name }}"
     group: "{{ svc_name }}"
     mode: 0755
-
-- name: Create service user
-  become: true
-  user:
-    state: present
-    name: "{{ svc_name }}"
-    group: "{{ svc_name }}"
-    home: "{{ wildfly_base_root }}/{{ svc_name }}"
-    shell: /sbin/nologin
-    comment: "Service user for {{ svc_name }} service."
 
 - name: Create service environment file
   become: true

@@ -68,7 +68,7 @@
 - name: Create service environment file
   become: true
   template:
-    src: svc-env.j2
+    src: service-env.j2
     dest: "/etc/default/{{ svc_name }}"
     owner: root
     group: root
@@ -77,7 +77,7 @@
 - name: Create service unit file
   become: true
   template:
-    src: svc-unit.j2
+    src: service-unit.j2
     dest: "/etc/systemd/system/{{ svc_name }}.service"
     owner: root
     group: root

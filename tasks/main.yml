@@ -19,6 +19,11 @@
     owner: "root"
     group: "root"
 
+- name: Create service group
+  group:
+    name: "{{ svc_name }}"
+    state: present
+
 - name: Create service user
   become: true
   user:

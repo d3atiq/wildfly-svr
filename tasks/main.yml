@@ -20,6 +20,7 @@
     group: "root"
 
 - name: Create service group
+  become: true
   group:
     name: "{{ svc_name }}"
     state: present

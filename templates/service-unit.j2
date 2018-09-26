@@ -1,0 +1,17 @@
+[Unit]
+Description={{ svc_name }} Wildfly Application Server Instance
+After=syslog.target network.target
+Before=nginx.service httpd.service
+
+[Service]
+Environment=LAUNCH_JBOSS_IN_BACKGROUND=1
+EnvironmentFile=/etc/default/{{ svc_name }}
+User={{ svc_name }}
+LimitNOFILE=102642
+PIDFile={{ wildfly_base_root }}/{{ svc_name }}/run/{{ svc_name }}.pid
+ExecStart=/bin/sh {{ wildfly_home_root }}/{{ wildfly_version }}/bin/standalone.sh -c ${WILDFLY_CONFIG} -b ${WILDFLY_BIND}
+StandardOutput=null
+
+[Install]
+WantedBy=multi-user.target
+

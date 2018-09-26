@@ -1,0 +1,76 @@
+---
+# tasks file for wildfly-svr
+
+- name: Download and unpack wildfly
+  become: true
+  unarchive:
+    remote_src: yes
+    src: "http://download.jboss.org/wildfly/{{ wildfly_version }}/wildfly-{{ wildfly_version }}.tar.gz"
+    dest: "{{ wildfly_home_root }}/wildfly-{{ wildfly_version }}"
+    owner: "root"
+    group: "root"
+
+- name: Create service base folder
+  become: true
+  file:
+    path: "{{ wildfly_base_root }}/{{ svc_name }}"
+    state: directory
+    owner: "{{ svc_name }}"
+    group: "{{ svc_name }}"
+    mode: 0755
+
+- name: Copy standalone to service base folder
+  become: true
+  command: cp -pr "{{ wildfly_home_root }}/{{ svc_name }}/standalone/*" "{{ wildfly_base_root }}/{{ svc_name }}"
+
+- name: Set permissions on service base folder
+  become: true
+  file:
+    dest: "{{ wildfly_base_root }}/{{ svc_name }}"
+    owner: "{{ svc_name }}"
+    group: "{{ svc_name }}"
+    recurse: true
+
+- name: Create service run folder
+  become: true
+  file:
+    path: "{{ wildfly_base_root }}/{{ svc_name }}/run"
+    state: directory
+    owner: "{{ svc_name }}"
+    group: "{{ svc_name }}"
+    mode: 0755
+
+- name: Create service user
+  become: true
+  user:
+    state: present
+    name: "{{ svc_name }}"
+    group: "{{ svc_name }}"
+    home: "{{ wildfly_base_root }}/{{ svc_name }}"
+    shell: /sbin/nologin
+    comment: "Service user for {{ svc_name }} service."
+
+- name: Create service environment file
+  become: true
+  template:
+    src: svc-env.j2
+    dest: "/etc/default/{{ svc_name }}"
+    owner: root
+    group: root
+    mode: 0644
+
+- name: Create service unit file
+  become: true
+  template:
+    src: svc-unit.j2
+    dest: "/etc/systemd/system/{{ svc_name }}.service"
+    owner: root
+    group: root
+    mode: 0755
+
+- name: Reload systemd daemons
+  become: true
+  systemd:
+    daemon_reload: true
+    name: "{{ svc_name }}"
+    state: started

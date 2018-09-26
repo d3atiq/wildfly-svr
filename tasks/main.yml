@@ -15,7 +15,7 @@
   unarchive:
     remote_src: yes
     src: "http://download.jboss.org/wildfly/{{ wildfly_version }}/wildfly-{{ wildfly_version }}.tar.gz"
-    dest: "{{ wildfly_home_root }}/wildfly-{{ wildfly_version }}"
+    dest: "{{ wildfly_home_root }}"
     owner: "root"
     group: "root"
 
@@ -31,7 +31,7 @@
     state: present
     name: "{{ svc_name }}"
     group: "{{ svc_name }}"
-    home: "{{ wildfly_base_root }}/{{ svc_name }}"
+#    home: "{{ wildfly_base_root }}/{{ svc_name }}"
     shell: /sbin/nologin
     comment: "Service user for {{ svc_name }} service."
 

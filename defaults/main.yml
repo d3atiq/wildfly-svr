@@ -1,8 +1,7 @@
 ---
 # defaults file for wildfly-svr
-wildfly_home_root: /opt
-wildfly_base_root: /var/lib/wildfly
-wildfly_user: wildfly
-wildfly_grp: wildfly
-#wildfly_version: no default for this one
-#svc_name: no default for this one
+wildfly:
+  home: /opt
+  base: /var/lib/wildfly
+#  version: wildfly version - no default for this one
+#  svc: service name in systemd - no default for this one - this is also the unix user and group name for the service

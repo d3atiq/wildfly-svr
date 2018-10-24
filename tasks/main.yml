@@ -4,7 +4,7 @@
 - name: Create wildfly installation folder
   become: true
   file:
-    path: "{{ wildfly_home_root }}/wildfly-{{ wildfly_version }}"
+    path: "{{ wildfly.home }}/wildfly-{{ wildfly.version }}"
     state: directory
     owner: root
     group: root
@@ -15,14 +15,14 @@
   unarchive:
     remote_src: yes
     src: "http://download.jboss.org/wildfly/{{ wildfly_version }}/wildfly-{{ wildfly_version }}.tar.gz"
-    dest: "{{ wildfly_home_root }}"
+    dest: "{{ wildfly.home }}"
     owner: "root"
     group: "root"
 
 - name: Create service base root folder
   become: true
   file:
-    path: "{{ wildfly_base_root }}"
+    path: "{{ wildfly.base }}"
     state: directory
     owner: root
     group: root
@@ -30,46 +30,46 @@
 
 - name: Copy standalone to service base folder
   become: true
-  command: cp -pr "{{ wildfly_home_root }}/wildfly-{{ wildfly_version }}/standalone" "{{ wildfly_base_root }}/{{ svc_name }}"
+  command: cp -pr "{{ wildfly.home }}/wildfly-{{ wildfly.version }}/standalone" "{{ wildfly.base }}/{{ wildfly.svc }}"
 
 - name: Create service group
   become: true
   group:
-    name: "{{ svc_name }}"
+    name: "{{ wildfly.svc }}"
     state: present
 
 - name: Create service user
   become: true
   user:
     state: present
-    name: "{{ svc_name }}"
-    group: "{{ svc_name }}"
-    home: "{{ wildfly_base_root }}/{{ svc_name }}"
+    name: "{{ wildfly.svc }}"
+    group: "{{ wildfly.svc }}"
+    home: "{{ wildfly.base }}/{{ wildfly.svc }}"
     shell: /sbin/nologin
-    comment: "Service user for {{ svc_name }} service."
+    comment: "Service user for {{ wildfly.svc }} service."
 
 - name: Set permissions on service base folder
   become: true
   file:
-    dest: "{{ wildfly_base_root }}/{{ svc_name }}"
-    owner: "{{ svc_name }}"
-    group: "{{ svc_name }}"
+    dest: "{{ wildfly.base }}/{{ wildfly.svc }}"
+    owner: "{{ wildfly.svc }}"
+    group: "{{ wildfly.svc }}"
     recurse: true
 
 - name: Create service run folder
   become: true
   file:
-    path: "{{ wildfly_base_root }}/{{ svc_name }}/run"
+    path: "{{ wildfly.base }}/{{ wildfly.svc }}/run"
     state: directory
-    owner: "{{ svc_name }}"
-    group: "{{ svc_name }}"
+    owner: "{{ wildfly.svc }}"
+    group: "{{ wildfly.svc }}"
     mode: 0755
 
 - name: Create service environment file
   become: true
   template:
     src: service-env.j2
-    dest: "/etc/default/{{ svc_name }}"
+    dest: "/etc/default/{{ wildfly.svc }}"
     owner: root
     group: root
     mode: 0644
@@ -78,7 +78,7 @@
   become: true
   template:
     src: service-unit.j2
-    dest: "/etc/systemd/system/{{ svc_name }}.service"
+    dest: "/etc/systemd/system/{{ wildfly.svc }}.service"
     owner: root
     group: root
     mode: 0755
@@ -87,5 +87,5 @@
   become: true
   systemd:
     daemon_reload: true
-    name: "{{ svc_name }}"
+    name: "{{ wildfly.svc }}"
     state: started

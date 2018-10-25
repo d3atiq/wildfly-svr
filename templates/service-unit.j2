@@ -1,15 +1,15 @@
 [Unit]
-Description={{ svc_name }} Wildfly Application Server Instance
+Description={{ wildfly.svc }} Wildfly Application Server Instance
 After=syslog.target network.target
 Before=nginx.service httpd.service
 
 [Service]
 Environment=LAUNCH_JBOSS_IN_BACKGROUND=1
-EnvironmentFile=/etc/default/{{ svc_name }}
-User={{ svc_name }}
+EnvironmentFile=/etc/default/{{ wildfly.svc }}
+User={{ wildfly.svc }}
 LimitNOFILE=102642
-PIDFile={{ wildfly_base_root }}/{{ svc_name }}/run/{{ svc_name }}.pid
-ExecStart=/bin/sh {{ wildfly_home_root }}/wildfly-{{ wildfly_version }}/bin/standalone.sh -c ${WILDFLY_CONFIG} -b ${WILDFLY_BIND}
+PIDFile={{ wildfly.base }}/{{ wildfly.svc }}/run/{{ wildfly.svc }}.pid
+ExecStart=/bin/sh {{ wildfly.home }}/wildfly-{{ wildfly.version }}/bin/standalone.sh -c ${WILDFLY_CONFIG} -b ${WILDFLY_BIND}
 StandardOutput=null
 
 [Install]

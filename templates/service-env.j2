@@ -1,9 +1,9 @@
-WILDFLY_USER={{ svc_name }}
+WILDFLY_USER={{ wildfly.svc }}
 STARTUP_WAIT=180
 SHUTDOWN_WAIT=30
-WILDFLY_HOME={{ wildfly_home_root }}/wildfly-{{ wildfly_version }}
+WILDFLY_HOME={{ wildfly.home }}/wildfly-{{ wildfly.version }}
 WILDFLY_CONFIG=standalone.xml
 WILDFLY_MODE=standalone
 WILDFLY_BIND=0.0.0.0
-JBOSS_BASE_DIR={{ wildfly_base_root }}/{{ svc_name }}
-JBOSS_MODULEPATH={{ wildfly_base_root }}/{{ svc_name }}/modules:{{ wildfly_home_root }}/wildfly-{{ wildfly_version }}/modules
+JBOSS_BASE_DIR={{ wildfly.base }}/{{ wildfly.svc }}
+JBOSS_MODULEPATH={{ wildfly.base }}/{{ wildfly.svc }}/modules:{{ wildfly.home }}/wildfly-{{ wildfly.version }}/modules

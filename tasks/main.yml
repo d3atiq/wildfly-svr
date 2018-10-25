@@ -14,7 +14,7 @@
   become: true
   unarchive:
     remote_src: yes
-    src: "http://download.jboss.org/wildfly/{{ wildfly_version }}/wildfly-{{ wildfly_version }}.tar.gz"
+    src: "http://download.jboss.org/wildfly/{{ wildfly.version }}/wildfly-{{ wildfly.version }}.tar.gz"
     dest: "{{ wildfly.home }}"
     owner: "root"
     group: "root"
